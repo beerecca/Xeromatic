@@ -6,7 +6,7 @@ using Xeromatic.Models;
 
 namespace Xeromatic.Services
 {
-    public class TweetDbService
+    public class TweetDbService : ITwitterService
     {
         private readonly string _connectionString = ConfigurationManager.ConnectionStrings["tweetDB"].ConnectionString;
 
@@ -21,6 +21,11 @@ namespace Xeromatic.Services
         public void InsertTweet(Tweet tweet)
         {
             // TODO Hint: check out the Dapper docs online. https://github.com/StackExchange/dapper-dot-net
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Execute("INSERT INTO dbo.Tweet VALUES (@Id, @Text)", tweet);
+            }
         }
     }
 }
